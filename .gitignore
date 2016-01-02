@@ -30,3 +30,10 @@
 
 # Debug files
 *.dSYM/
+
+# Other
+*.cmd
+*.mod
+8812au.mod.c
+Module.symvers
+modules.order

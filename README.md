@@ -1,11 +1,13 @@
 8812au
 ======
 
-Linux driver for Realtek 802.11ac, used in many dual-band Wifi USB dongles.
+Linux driver for Realtek 802.11ac, used in many dual-band (5Ghz/2.4Ghz) WiFi USB adapters (dongles).
 
 This source was [originally distributed by TP-LINK](http://www.tplink.com/be/support/download/?model=Archer+T4U&version=V1) on 2015/8/21 to be used with their [Archer T4U AC1200 V1](http://www.tplink.com/be/products/details/?model=Archer+T4U).
 
-I have not tested it on other 8812au devices.
+I have not tested it on other 8812au devices, but it may work for you!
+
+Note that this driver only uses USB 2.0! You will not get USB 3.0 speeds on Linux, even if you use a USB 3.0 port. As far as I can tell, nobody has implemented USB 3.0 support for 8812au on Linux. :(
 
 Modifications
 -------------

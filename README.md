@@ -30,6 +30,8 @@ To uninstall the driver from all kernels:
 
     sudo dkms remove 8812au/150821 --all
 
+(Note that I configured DKMS to use all your cores for compilation of the driver. This is a good practice that greatly speeds up installation. I hope to see it used more often!)
+
 
 Other Implementations
 ---------------------

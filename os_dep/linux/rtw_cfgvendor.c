@@ -50,7 +50,11 @@ struct sk_buff * dbg_rtw_cfg80211_vendor_event_alloc(struct wiphy *wiphy, int le
 	struct sk_buff *skb;
 	unsigned int truesize = 0;
 
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 1, 0)) // tliron
 	skb = cfg80211_vendor_event_alloc(wiphy, len, event_id, gfp);
+#else
+	skb = cfg80211_vendor_event_alloc(wiphy, NULL, len, event_id, gfp);
+#endif
 
 	if(skb)
 		truesize = skb->truesize;
@@ -139,9 +143,16 @@ int dbg_rtw_cfg80211_vendor_cmd_reply(struct sk_buff *skb
 #define rtw_cfg80211_vendor_cmd_reply(skb) \
 		dbg_rtw_cfg80211_vendor_cmd_reply(skb, MSTAT_FUNC_CFG_VENDOR|MSTAT_TYPE_SKB, __FUNCTION__, __LINE__)
 #else
+// tliron {
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 1, 0))
 #define rtw_cfg80211_vendor_event_alloc(wiphy, len, event_id, gfp) \
 	cfg80211_vendor_event_alloc(wiphy, len, event_id, gfp)
-	
+#else
+#define rtw_cfg80211_vendor_event_alloc(wiphy, len, event_id, gfp) \
+	cfg80211_vendor_event_alloc(wiphy, NULL, len, event_id, gfp)
+#endif
+// tliron }
+
 #define rtw_cfg80211_vendor_event(skb, gfp) \
 	cfg80211_vendor_event(skb, gfp)
 	

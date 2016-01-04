@@ -901,7 +901,13 @@ void rtw_cfg80211_indicate_disconnect(_adapter *padapter)
 			cfg80211_connect_result(padapter->pnetdev, NULL, NULL, 0, NULL, 0, 
 				WLAN_STATUS_UNSPECIFIED_FAILURE, GFP_ATOMIC/*GFP_KERNEL*/);
 		else if(pwdev->sme_state==CFG80211_SME_CONNECTED)
+// tliron {
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 2, 0))
 			cfg80211_disconnected(padapter->pnetdev, 0, NULL, 0, GFP_ATOMIC);
+#else
+			cfg80211_disconnected(padapter->pnetdev, 0, NULL, 0, FALSE, GFP_ATOMIC);
+#endif
+// tliron }
 		//else
 			//DBG_8192C("pwdev->sme_state=%d\n", pwdev->sme_state);
 
@@ -909,7 +915,13 @@ void rtw_cfg80211_indicate_disconnect(_adapter *padapter)
 		#else
 
 		if(check_fwstate(&padapter->mlmepriv, _FW_LINKED))		
+// tliron {
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 2, 0))
 			cfg80211_disconnected(padapter->pnetdev, 0, NULL, 0, GFP_ATOMIC);
+#else
+			cfg80211_disconnected(padapter->pnetdev, 0, NULL, 0, FALSE, GFP_ATOMIC);
+#endif
+// tliron }
 		else
 			cfg80211_connect_result(padapter->pnetdev, NULL, NULL, 0, NULL, 0, 
 				WLAN_STATUS_UNSPECIFIED_FAILURE, GFP_ATOMIC/*GFP_KERNEL*/);
@@ -1825,16 +1837,40 @@ static int cfg80211_rtw_get_station(struct wiphy *wiphy,
 			goto exit;
 		}
 
+// tliron {
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,0,0))
 		sinfo->filled |= STATION_INFO_SIGNAL;
+#else
+		sinfo->filled |= BIT(NL80211_STA_INFO_SIGNAL);
+#endif
+// tliron }
 		sinfo->signal = translate_percentage_to_dbm(padapter->recvpriv.signal_strength);
 
+// tliron {
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,0,0))
 		sinfo->filled |= STATION_INFO_TX_BITRATE;
+#else
+		sinfo->filled |= BIT(NL80211_STA_INFO_TX_BITRATE);
+#endif
+// tliron }
 		sinfo->txrate.legacy = rtw_get_cur_max_rate(padapter);
 
+// tliron {
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,0,0))
 		sinfo->filled |= STATION_INFO_RX_PACKETS;
+#else
+		sinfo->filled |= BIT(NL80211_STA_INFO_RX_PACKETS);
+#endif
+// tliron }
 		sinfo->rx_packets = sta_rx_data_pkts(psta);
 
+// tliron {
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,0,0))
 		sinfo->filled |= STATION_INFO_TX_PACKETS;
+#else
+		sinfo->filled |= BIT(NL80211_STA_INFO_TX_PACKETS);
+#endif
+// tliron }
 		sinfo->tx_packets = psta->sta_stats.tx_pkts;
 
 	}
@@ -3573,7 +3609,11 @@ void rtw_cfg80211_indicate_sta_assoc(_adapter *padapter, u8 *pmgmt_frame, uint f
 			ie_offset = _REASOCREQ_IE_OFFSET_;
 	
 		sinfo.filled = 0;
+// tliron {
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,0,0))
 		sinfo.filled = STATION_INFO_ASSOC_REQ_IES;
+#endif
+// tliron }
 		sinfo.assoc_req_ies = pmgmt_frame + WLAN_HDR_A3_LEN + ie_offset;
 		sinfo.assoc_req_ies_len = frame_len - WLAN_HDR_A3_LEN - ie_offset;
 		cfg80211_new_sta(ndev, GetAddr2Ptr(pmgmt_frame), &sinfo, GFP_ATOMIC);
@@ -4431,7 +4471,13 @@ static int	cfg80211_rtw_dump_station(struct wiphy *wiphy, struct net_device *nde
 	}
 	_rtw_memcpy(mac, psta->hwaddr, ETH_ALEN);
 	sinfo->filled = 0;
+// tliron {
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,0,0))
 	sinfo->filled |= STATION_INFO_SIGNAL;
+#else
+	sinfo->filled |= BIT(NL80211_STA_INFO_SIGNAL);
+#endif
+// tliron }
 	sinfo->signal = psta->rssi;
 	
 exit:

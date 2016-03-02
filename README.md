@@ -15,7 +15,7 @@ Please don't open issues here with general problems. I did not write this driver
 My Modifications
 ----------------
 
-* Added support for Linux 3.18 and above (the issue was a change in the `rtw_cfg80211_rx_mgmt` API)
+* Added support for Linux 3.18 to 4.5: to see my changes, grep for "tliron"
 * Added support for [DKMS](http://linux.dell.com/dkms/)
 
 
